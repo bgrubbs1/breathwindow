@@ -2,7 +2,13 @@
 
 **Know the healthiest window for your next run, ride, commute, or outdoor workday.**
 
+[Open the live app](https://bgrubbs1.github.io/breathwindow/) · [Watch the 2:36 demo](https://www.youtube.com/watch?v=AnBMZNgU8Ds)
+
 BreathWindow is a privacy-first, open-source web app that turns live hourly weather and air-quality forecasts into a personal outdoor exposure plan. Instead of showing a generic AQI number, it estimates how pollutant dose, ozone, heat, rain, activity intensity, duration, and health sensitivity combine for the next 24 hours.
+
+## Preview
+
+![BreathWindow desktop interface](docs/screenshots/breathwindow-hero.png)
 
 ## Why it matters
 
@@ -69,6 +75,9 @@ No API key is required. The app does not send user health selections to a server
 │   ├── app.js
 │   └── model.js
 ├── tests/model.test.js
+├── docs/
+│   ├── breathwindow-demo.mp4
+│   └── screenshots/
 ├── manifest.json
 └── sw.js
 ```

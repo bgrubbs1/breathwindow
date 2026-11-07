@@ -3,4 +3,5 @@ node_modules/
 *.log
 
 docs/video-frames/
+.trigger-tree/
 node_modules/
