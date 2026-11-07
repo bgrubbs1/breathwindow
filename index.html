@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#143f35">
+  <meta name="description" content="BreathWindow turns live weather and air-quality forecasts into a personalized outdoor exposure plan.">
+  <title>BreathWindow — find your cleanest outdoor window</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="BreathWindow home">
+      <img src="./assets/icon.svg" alt="" width="34" height="34">
+      <span>BreathWindow</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="#method">Method</a>
+      <a href="https://github.com/bgrubbs1/breathwindow" id="repo-link">GitHub</a>
+      <button class="nav-button" id="share-top" type="button">Share plan</button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="pulse-dot"></span> Personal environment intelligence</p>
+        <h1 id="hero-title">Find the best<br><em>breathable</em> window.</h1>
+        <p class="lede">BreathWindow turns the next 24 hours of air quality, heat, and weather into one practical plan for your run, ride, commute, or workday.</p>
+
+        <form class="planner" id="planner-form" autocomplete="off">
+          <div class="location-row">
+            <label for="city">Where are you heading out?</label>
+            <div class="location-field">
+              <span class="location-icon" aria-hidden="true">⌖</span>
+              <input id="city" name="city" type="search" value="Blacksburg, VA" placeholder="City or postcode" aria-describedby="city-hint" required>
+              <button type="submit" class="find-button">Find my window</button>
+            </div>
+            <div class="suggestions" id="suggestions" role="listbox" hidden></div>
+            <p class="field-hint" id="city-hint">Live, key-free forecasts. Your profile stays in this browser.</p>
+          </div>
+
+          <fieldset class="compact-fieldset">
+            <legend>What are you doing?</legend>
+            <div class="segmented" id="activity-options">
+              <label><input type="radio" name="activity" value="commute" checked><span>Commute</span></label>
+              <label><input type="radio" name="activity" value="cycling"><span>Cycle</span></label>
+              <label><input type="radio" name="activity" value="running"><span>Run</span></label>
+              <label><input type="radio" name="activity" value="work"><span>Outdoor work</span></label>
+            </div>
+          </fieldset>
+
+          <div class="profile-grid">
+            <label class="select-label">Time outside
+              <select id="duration" name="duration">
+                <option value="15">15 minutes</option>
+                <option value="30" selected>30 minutes</option>
+                <option value="45">45 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="90">90 minutes</option>
+              </select>
+            </label>
+            <label class="select-label">Health sensitivity
+              <select id="sensitivity" name="sensitivity">
+                <option value="none">No extra sensitivity</option>
+                <option value="asthma">Asthma or reactive airway</option>
+                <option value="heartlung">Heart or lung condition</option>
+                <option value="older">Older adult (65+)</option>
+                <option value="child">Child under 12</option>
+              </select>
+            </label>
+          </div>
+        </form>
+
+        <div class="quick-places" aria-label="Sample cities">
+          <span>Try</span>
+          <button type="button" data-place="Blacksburg, VA">Blacksburg</button>
+          <button type="button" data-place="New York, NY">New York</button>
+          <button type="button" data-place="Phoenix, AZ">Phoenix</button>
+          <button type="button" data-place="London">London</button>
+        </div>
+      </div>
+
+      <aside class="score-shell" id="score-shell" aria-live="polite">
+        <div class="score-topline">
+          <div>
+            <p class="micro-label">CURRENT EXPOSURE</p>
+            <h2 id="result-location">Blacksburg, VA</h2>
+          </div>
+          <button type="button" class="icon-button" id="refresh" title="Refresh forecast" aria-label="Refresh forecast">↻</button>
+        </div>
+
+        <div class="score-main">
+          <div class="gauge" id="gauge" style="--progress: 0deg">
+            <div class="gauge-inner">
+              <strong id="risk-score">—</strong>
+              <span id="risk-level">Loading</span>
+            </div>
+          </div>
+          <div class="score-summary">
+            <p class="verdict" id="verdict">Reading the next 24 hours…</p>
+            <p id="verdict-detail">We’ll compare pollutant dose, heat stress, and rain risk for your chosen activity.</p>
+            <div class="data-state" id="data-state"><span></span> Live forecast loading</div>
+          </div>
+        </div>
+
+        <div class="component-grid" aria-label="Exposure contributors">
+          <div class="component">
+            <div class="component-label"><span>Air</span><strong id="air-score">—</strong></div>
+            <div class="mini-track"><span id="air-bar"></span></div>
+            <small id="air-detail">PM2.5 + ozone</small>
+          </div>
+          <div class="component">
+            <div class="component-label"><span>Heat</span><strong id="heat-score">—</strong></div>
+            <div class="mini-track"><span id="heat-bar"></span></div>
+            <small id="heat-detail">Apparent load</small>
+          </div>
+        </div>
+
+        <div class="weather-strip" id="weather-strip">
+          <div><span>Now</span><strong id="now-temp">—</strong></div>
+          <div><span>PM2.5</span><strong id="now-pm">—</strong></div>
+          <div><span>Ozone</span><strong id="now-ozone">—</strong></div>
+          <div><span>Rain</span><strong id="now-rain">—</strong></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="alert-banner" id="demo-banner" hidden>
+      <span>Live forecast unavailable.</span>
+      <p>You’re seeing a clearly labeled sample scenario. Every calculation below still runs normally.</p>
+      <button id="retry-live" type="button">Retry live data</button>
+    </section>
+
+    <section class="results-grid" id="results" aria-labelledby="plan-title">
+      <article class="recommendation-card">
+        <div class="section-kicker">YOUR BEST MOVE</div>
+        <div class="recommendation-heading">
+          <span class="arrow-mark" aria-hidden="true">↗</span>
+          <div>
+            <h2 id="plan-title">Building your personal plan…</h2>
+            <p id="plan-subtitle">Balancing air, heat, weather, and how hard you’ll breathe.</p>
+          </div>
+        </div>
+        <div class="impact-row">
+          <div><strong id="best-time">—</strong><span>best window</span></div>
+          <div><strong id="improvement">—</strong><span>lower exposure</span></div>
+          <div><strong id="best-window-score">—</strong><span>risk score</span></div>
+        </div>
+        <div class="actions">
+          <button type="button" class="secondary-button" id="copy-plan">Copy plan</button>
+          <button type="button" class="text-button print-button" onclick="window.print()">Print</button>
+        </div>
+      </article>
+
+      <article class="timeline-card">
+        <div class="card-header">
+          <div>
+            <div class="section-kicker">NEXT 24 HOURS</div>
+            <h2>Exposure forecast</h2>
+          </div>
+          <div class="legend" aria-label="Risk legend">
+            <span><i class="low"></i>Low</span>
+            <span><i class="moderate"></i>Moderate</span>
+            <span><i class="high"></i>High</span>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <svg id="risk-chart" viewBox="0 0 1000 280" role="img" aria-labelledby="chart-title chart-desc">
+            <title id="chart-title">Hourly personal exposure risk for the next 24 hours</title>
+            <desc id="chart-desc">A lower line means less pollutant, heat, and weather exposure for your activity.</desc>
+          </svg>
+        </div>
+        <div class="chart-note"><span class="chart-key"></span> Lower is better. Scores already account for your activity and sensitivity.</div>
+      </article>
+    </section>
+
+    <section class="detail-grid">
+      <article class="windows-card">
+        <div class="section-kicker">RANKED OPTIONS</div>
+        <h2>Three windows worth planning around</h2>
+        <div id="window-list" class="window-list"></div>
+      </article>
+
+      <article class="why-card" id="why-card">
+        <div class="section-kicker">THE PLAYBOOK</div>
+        <h2>What to do differently</h2>
+        <div id="recommendation-list" class="recommendation-list"></div>
+        <button class="why-toggle" type="button" id="why-toggle" aria-expanded="false">How the score works <span>+</span></button>
+        <div class="method-copy" id="method-copy" hidden>
+          <p>BreathWindow multiplies pollutant concentration by an activity-specific breathing rate and duration. Ozone and heat are added as separate stress components, then the total is adjusted for health sensitivity.</p>
+          <p>This is a planning aid, not a medical device. Follow local alerts and clinical advice.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="method-section" id="method">
+      <p class="eyebrow">Built for real-world use</p>
+      <div class="method-grid">
+        <div>
+          <h2>One forecast is not a plan.</h2>
+          <p>Air quality changes hour by hour. A 30-minute run at 5 PM can deliver far more PM2.5 and ozone than the same run at 7 AM. BreathWindow makes that tradeoff visible before you leave.</p>
+        </div>
+        <div class="feature-list">
+          <div><span>01</span><p><strong>Personal dose, not generic AQI.</strong> Duration, breathing rate, and sensitivity all change the number.</p></div>
+          <div><span>02</span><p><strong>Live and fail-safe.</strong> Open-Meteo powers the forecast; a clearly labeled demo mode keeps the app explorable offline.</p></div>
+          <div><span>03</span><p><strong>Private by default.</strong> No account, no ad tracking, and no profile data sent anywhere. The share link contains only the plan inputs.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand"><img src="./assets/icon.svg" alt="" width="28" height="28"><strong>BreathWindow</strong></div>
+    <p>Weather and air-quality data from <a href="https://open-meteo.com/">Open-Meteo</a>. Built as a public, open-source project.</p>
+    <p id="footer-source">Planning aid only. Check local public-health alerts.</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
